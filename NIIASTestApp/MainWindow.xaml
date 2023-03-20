@@ -1,0 +1,186 @@
+﻿<Window x:Class="NIIASTestApp.MainWindow"
+        x:Name="win_Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NIIASTestApp.CustomControls"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        Height="1024" 
+        Width="1536"
+        FontFamily="{StaticResource MainFont}"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent" 
+        BorderBrush="Transparent"
+        ResizeMode="NoResize" 
+        WindowStartupLocation="CenterScreen" 
+        BorderThickness="0"
+        RenderTransformOrigin="0.5,0.5"
+        Loaded="WinMain_Loaded"
+        DataContext="{Binding VM, RelativeSource={RelativeSource Self}}">
+
+    <Grid x:Name="grid_Window"
+          MouseLeftButtonDown="GridMain_MouseLeftButtonDown">
+
+        <!--Window border-->
+        <Border x:Name="border_Window"
+                Background="{StaticResource btnBrush}"
+                CornerRadius="40"
+                ClipToBounds="True">
+        </Border>
+
+
+        <!--Border Controls-->
+        <Border x:Name="border_GridControls"
+                Margin="40"
+                ClipToBounds="True"
+                CornerRadius="50">
+            <Border.Background>
+                <SolidColorBrush Color="{StaticResource calcBackgroundColor}"  Opacity="0.8"/>
+            </Border.Background>
+        </Border>
+
+
+        <!--Grid Controls-->
+        <Grid x:Name="grid_Controls"
+              Margin="{Binding ElementName=border_GridControls, Path=Margin}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="35*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!--Border RZD Sign-->
+
+            <Border x:Name="border_RZD" 
+                    DockPanel.Dock="Right"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Width="200"
+                    HorizontalAlignment="Right"
+                    ClipToBounds="True">
+                <Border.Effect>
+                    <BlurEffect Radius="15"/>
+                </Border.Effect>
+
+                <Border.Background>
+                    <ImageBrush Stretch="Uniform" 
+                        Opacity="0.3">
+                        <ImageBrush.ImageSource>/Images/rzd.png</ImageBrush.ImageSource>
+                    </ImageBrush>
+                </Border.Background>
+            </Border>
+
+
+
+            <!--Black lines-->
+            <Rectangle Grid.Row="2"
+                       Grid.Column="1"
+                       VerticalAlignment="Top"
+                       Height="0.5"
+                       Fill="Black"/>
+            <Rectangle Grid.Row="2"
+                       Grid.Column="1"
+                       VerticalAlignment="Bottom"
+                       Height="0.5"
+                       Fill="Black"/>
+
+
+
+            <!--Buttons-->
+            <Button x:Name="btn_Off"
+                Template="{StaticResource roundButtonTemplate}"
+                Style="{StaticResource btn_Style}"
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                FontSize="25"
+                Content="&#xf011;"
+                Click="Btn_Off_Click"/>
+
+            <Ellipse x:Name="btn_WindowSlaveOpenEllipse" 
+                     Grid.Row="3"
+                     Grid.Column="1"
+                     Height="50"
+                     Width="50" 
+                     Stroke="Black"
+                     StrokeThickness="0.5">
+
+            </Ellipse>
+            <Button x:Name="btn_WindowSlaveOpen"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Template="{StaticResource roundButtonTemplate}"
+                    Style="{StaticResource btn_Style}"
+                    Content="&#xf26c;"
+                    BorderBrush="Transparent"
+                    PreviewMouseLeftButtonDown="Btn_WindowSlaveOpen_PreviewMouseLeftButtonDown">
+            </Button>
+
+            <!--ComboBoxes-->
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Left" 
+                Orientation="Horizontal">
+                <ComboBox x:Name="cb_Station"
+                          Margin="0,10,0,10"
+                          Width="200"
+                          SelectedItem="{Binding StationName}"
+                          ItemsSource="{Binding CBStations}"
+                          SelectionChanged="CB_Station_SelectionChanged">
+                    
+                </ComboBox>
+                <ComboBox x:Name="cb_Park"
+                          VerticalAlignment="{Binding ElementName=cb_Station, Path=VerticalAlignment}"
+                          Margin="20,10,0,10"
+                          Width="{Binding ElementName=cb_Station, Path=Width}"
+                          SelectedItem="{Binding ParkName}"
+                          ItemsSource="{Binding CBParks}">
+                </ComboBox>
+
+                <ComboBox x:Name="cb_Color"
+                          VerticalAlignment="{Binding ElementName=cb_Station, Path=VerticalAlignment}"
+                          Margin="{Binding ElementName=cb_Park, Path=Margin}"
+                          Width="{Binding ElementName=cb_Station, Path=Width}"
+                          SelectedItem="{Binding ColorName}"
+                          ItemsSource="{Binding CBColors}"
+                          DropDownClosed="CB_Color_DropDownClosed">
+                </ComboBox>
+
+            </StackPanel>
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Orientation="Horizontal">
+                <TextBlock x:Name="tb_Station"
+                           Style="{StaticResource tb_signsStyle}"
+                           Width="{Binding ElementName=cb_Park, Path=Width}"
+                           Margin="{Binding ElementName=cb_Station, Path=Margin}">
+                    Станция
+                </TextBlock>
+                <TextBlock Style="{StaticResource tb_signsStyle}"
+                           Width="{Binding ElementName=cb_Park, Path=Width}"
+                           Margin="{Binding ElementName=cb_Park, Path=Margin}">
+                    Парк
+                </TextBlock>
+                <TextBlock Style="{StaticResource tb_signsStyle}"
+                           Width="{Binding ElementName=cb_Color, Path=Width}"
+                           Margin="{Binding ElementName=cb_Color, Path=Margin}">
+                    Цвет заливки
+                </TextBlock>
+            </StackPanel>
+            <local:StationScheme x:Name="stationScheme" Grid.Row="2"
+                                 Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</Window>
